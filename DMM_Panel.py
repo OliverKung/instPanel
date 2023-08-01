@@ -1,18 +1,14 @@
 # pyBode GUI with Kivy
 import numpy as np
 import pyqtgraph as pg
-import sys,threading
-import os,time,multiprocessing,subprocess,re
+import sys,threading,os
 from PyQt5.QtWidgets import QApplication,QWidget,QMainWindow,QMessageBox,QSystemTrayIcon,QMenu,QLCDNumber
 from PyQt5.QtCore import QUrl,pyqtSlot,QTimer
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-import PyQt5.QtCore as QtCore
-from PyQt5.QtGui import QIcon
 import threading
 from apscheduler.schedulers.blocking import BlockingScheduler
 import DMM_Panel_GUI
 import UniversalDMM
-from qt_material import apply_stylesheet
+import plot
 
 class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
     def __init__(self):
@@ -20,11 +16,11 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
         DMM_Panel_GUI.Ui_MainWindow.__init__(self)
         self.setupUi(self)
         self.STOPButton.setEnabled(False)
+        self.time_array=np.zeros(0,dtype=float)
+        self.value_array = np.zeros(0,dtype=float)
         self.set_graph_ui()
         self.bind_singnal_and_slot()
         self.refresh_model()
-        self.time_array=np.zeros(0,dtype=float)
-        self.value_array = np.zeros(0,dtype=float)
     
     def bind_singnal_and_slot(self):
         self.Model_Refresh.clicked.connect(self.refresh_model)
@@ -47,9 +43,9 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
     
     def set_graph_ui(self):
         pg.setConfigOptions(antialias = True)
-        win = pg.GraphicsLayoutWidget()
-        self.WaveFormLayout.addWidget(win)
-        self.waveform = win.addPlot()
+        self.win = pg.GraphicsLayoutWidget()
+        self.win_plot = plot.SpectrumPlotWidget(self.win)
+        self.WaveFormLayout.addWidget(self.win)
 
     @pyqtSlot()
     def on_DCV_Button_clicked(self):
@@ -84,8 +80,7 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
         self.DisplayLabel.setText(str(value))
         self.value_array=np.append(self.value_array,value)
         self.time_array=np.append(self.time_array,len(self.time_array))
-        self.waveform.plot(self.time_array,self.value_array)
-
+        self.win_plot.update_plot(self.time_array,self.value_array)
     
     @pyqtSlot()
     def on_STOPButton_clicked(self):
@@ -95,7 +90,6 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
-    apply_stylesheet(app,theme="dark_amber.xml")
     mainc=mainCode()
     mainc.show()
     sys.exit(app.exec_())
