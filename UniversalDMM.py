@@ -3,7 +3,7 @@ import vxi11
 from enum import Enum
 
 class function(Enum):
-    DVC = 0
+    DCV = 0
     ACV = 1
     Ohm2W = 2
     Ohm4W = 3
@@ -52,6 +52,7 @@ class DMM:
         self.loadCommand()
         self.instr=vxi11.Instrument(self.addr)
         self.instr.write("SYST:BEEP")
+        self.mode=function.DCV
         print(self.instr.ask("*IDN?"))
     def loadCommand(self):
         with open(self.ini_file_path,"r") as f:
@@ -140,6 +141,14 @@ class DMM:
             if(cmd.cmd_name.lower()=="read"):
                 value = self.instr.ask(cmd.cmd_value)
         return float(value)
+    def returnFunc(self,param_name:str):
+        for cmd in self.cmd_list:
+            if(cmd.cmd_name.lower()==param_name.lower()):
+                return cmd.cmd_value
+    def set_NPLC(self,mode:function,nplc:str):
+        for function in self.func_list:
+            if(function.func_name==mode.name):
+                self.instr.write(function.)
 
 if __name__=="__main__":
     my_dmm=DMM("192.168.31.237","34465A")

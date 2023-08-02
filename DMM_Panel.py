@@ -40,7 +40,9 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
     @pyqtSlot()
     def on_ConnectButton_clicked(self):
         self.dmm = UniversalDMM.DMM(self.IP_ADDR.text(),self.DMM_Model.currentText())
-    
+        self.refresh_NPLC()
+        self.dmm.set_DCV()
+
     def set_graph_ui(self):
         pg.setConfigOptions(antialias = True)
         self.win = pg.GraphicsLayoutWidget()
@@ -69,6 +71,7 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
         self.StartButton.setEnabled(False)
         self.time_array=np.zeros(0,dtype=float)
         self.value_array = np.zeros(0,dtype=float)
+        self.dmm.mode = UniversalDMM.function.DCV
 
     def start_jobs(self):
         self.scheduler = BlockingScheduler()
@@ -81,12 +84,18 @@ class mainCode(QMainWindow,DMM_Panel_GUI.Ui_MainWindow):
         self.value_array=np.append(self.value_array,value)
         self.time_array=np.append(self.time_array,len(self.time_array))
         self.win_plot.update_plot(self.time_array,self.value_array)
-    
+
     @pyqtSlot()
     def on_STOPButton_clicked(self):
         self.scheduler.shutdown()
         self.StartButton.setEnabled(True)
         self.STOPButton.setEnabled(False)
+
+    def refresh_NPLC(self):
+        NPLC_List=self.dmm.returnFunc("NPLC").split(",")
+        for nplc in NPLC_List:
+            self.NPLC.addItem(nplc)
+        
 
 if __name__=="__main__":
     app = QApplication(sys.argv)

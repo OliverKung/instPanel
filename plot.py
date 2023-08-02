@@ -55,9 +55,9 @@ class SpectrumPlotWidget:
         self.create_main_curve()
 
         # Create crosshair
-        self.vLine = pg.InfiniteLine(angle=90, movable=False)
+        self.vLine = pg.InfiniteLine(angle=90, movable=False, pen = pg.mkPen(width = 3))
         self.vLine.setZValue(1000)
-        self.hLine = pg.InfiniteLine(angle=0, movable=False)
+        self.hLine = pg.InfiniteLine(angle=0, movable=False, pen = pg.mkPen(width = 3))
         self.vLine.setZValue(1000)
         self.plot.addItem(self.vLine, ignoreBounds=True)
         self.plot.addItem(self.hLine, ignoreBounds=True)
@@ -66,7 +66,7 @@ class SpectrumPlotWidget:
 
     def create_main_curve(self):
         """Create main spectrum curve"""
-        self.curve = self.plot.plot(pen=self.main_color)
+        self.curve = self.plot.plot(pen=pg.mkPen(self.main_color,width = 4.5))
         self.curve.setZValue(900)
 
     def create_peak_hold_max_curve(self):

@@ -209,7 +209,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setStretch(0, 8)
         self.horizontalLayout_4.setStretch(1, 2)
         self.verticalLayout_3.addLayout(self.horizontalLayout_4)
-        self.verticalLayout_3.setStretch(0, 1)
         self.verticalLayout_3.setStretch(1, 1)
         self.verticalLayout_3.setStretch(2, 2)
         self.verticalLayout_3.setStretch(3, 1)

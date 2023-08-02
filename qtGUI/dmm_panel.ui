@@ -34,7 +34,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="8,2">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,2,1">
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1,2,1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
@@ -61,6 +61,9 @@
              <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
